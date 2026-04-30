@@ -41,7 +41,8 @@
         "--enable-gpl",
         "--enable-libx264",
         "--disable-autodetect",
-        "--enable-shared"
+        "--enable-shared",
+        "--disable-doc"
       ],
       "sources": [
         {
