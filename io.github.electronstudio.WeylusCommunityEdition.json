@@ -1,34 +1,38 @@
 {
   "id": "io.github.electronstudio.WeylusCommunityEdition",
-  "runtime": "org.freedesktop.Platform",
-  "runtime-version": "23.08",
-  "sdk": "org.freedesktop.Sdk",
+  "runtime": "org.gnome.Platform",
+  "runtime-version": "50",
+  "sdk": "org.gnome.Sdk",
   "sdk-extensions": [
     "org.freedesktop.Sdk.Extension.rust-stable",
-    "org.freedesktop.Sdk.Extension.node18"
+    "org.freedesktop.Sdk.Extension.node20",
+    "org.freedesktop.Sdk.Extension.llvm22"
   ],
   "command": "weylus",
   "finish-args": [
-    "--socket=x11",
+    "--socket=wayland",
+    "--socket=fallback-x11",
     "--share=ipc",
     "--device=all",
     "--share=network",
     "--filesystem=xdg-run/pipewire-0"
   ],
+  "build-options": {
+    "append-path": "/usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/llvm22/bin",
+    "prepend-ld-library-path": "/usr/lib/sdk/llvm22/lib",
+    "make-args": ["-j4"]
+  },
   "modules": [
+    "fltk-rs-modules.json",
     {
       "name": "x264",
       "buildsystem": "autotools",
-      "config-opts": [
-        "--disable-opencl",
-        "--disable-cli",
-        "--enable-shared"
-      ],
+      "config-opts": ["--disable-opencl", "--disable-cli", "--enable-shared"],
       "sources": [
         {
           "type": "archive",
-          "url": "https://code.videolan.org/videolan/x264/-/archive/4613ac3c15fd75cebc4b9f65b7fb95e70a3acce1/x264-4613ac3c15fd75cebc4b9f65b7fb95e70a3acce1.tar.bz2",
-          "sha512": "6d0d9e079d6c7650abb5c00ad60cf3cfe72a220b3ee7cd030d4daeefdd9feeb4d056cf2e01b2f8d2fb0a66ccc15cdde860237f8ac5eac42ede6e5444a81346f8"
+          "url": "https://code.videolan.org/videolan/x264/-/archive/0480cb05fa188d37ae87e8f4fd8f1aea3711f7ee/x264-0480cb05fa188d37ae87e8f4fd8f1aea3711f7ee.tar.bz2",
+          "sha512": "4ff475b95e3bd93d1478155083daea241be0ba738ec2576fa423f247c14b3c04192e72809edf5bf6c2c928cb2bb2d4b739bda12749074df2d56aec066c627ac0"
         }
       ]
     },
@@ -41,49 +45,73 @@
         "--enable-gpl",
         "--enable-libx264",
         "--disable-autodetect",
-        "--enable-shared"
+        "--enable-shared",
+        "--disable-doc",
+        "--disable-everything",
+        "--enable-encoder=libx264",
+        "--enable-muxer=mp4",
+        "--enable-demuxer=rawvideo",
+        "--enable-filter=scale,buffersrc,buffersink",
+        "--enable-protocol=file"
       ],
       "sources": [
         {
           "type": "archive",
-          "url": "https://www.ffmpeg.org/releases/ffmpeg-6.1.1.tar.xz",
-          "sha512": "fca3f8635f29182e3ae0fe843a8a53614e4b47e22c11508df3ff7cdbafbb4b5ee0d82d9b3332871f7c1032033b1cad2f67557d7c5f7f7d85e2adadca122965d5"
+          "url": "https://www.ffmpeg.org/releases/ffmpeg-8.1.1.tar.xz",
+          "sha512": "f7873208d99cccfcf7b6aa3fe8e740e0f90f0ac55352f5eed93f994d51b5839700907811ac6cb160d09b4dacc6b174609bb7ed7fe902b3be3d787d86fe1b17bd"
         }
       ]
     },
+
     {
       "name": "WeylusCommunityEdition",
       "buildsystem": "simple",
       "build-options": {
-        "append-path": "/usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/node18/bin",
+        "append-path": "/usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/node20/bin",
+        "prepend-ld-library-path": "/usr/lib/sdk/llvm22/lib",
         "env": {
-          "RUSTFLAGS": "-A dead_code -A unused_imports -L /app/lib",
+          "CFLAGS": "-I/app/include/pango-1.0/ -I/app/include/glib-2.0/ -I/app/lib64/glib-2.0/include/ -I/app/include/harfbuzz/ -I/app/include/cairo/ -lffi -lgobject-2.0 -lglib-2.0 -lcairo -lpcre2-8",
+          "CXXFLAGS": "-I/app/include/pango-1.0/ -I/app/include/glib-2.0/ -I/app/lib64/glib-2.0/include/ -I/app/include/harfbuzz/ -I/app/include/cairo/ -lffi -lgobject-2.0 -lglib-2.0 -lcairo -lpcre2-8",
+          "RUSTFLAGS": "-A dead_code -A unused_imports -L /app/lib  -L /app/lib64 -C link-arg=-I/app/include/pango-1.0/ -C link-arg=-I/app/include/glib-2.0/ -C link-arg=-I/app/lib64/glib-2.0/include/ -C link-arg=-I/app/include/harfbuzz/ -C link-arg=-I/app/include/cairo/ -C link-arg=-lffi -C link-arg=-lgobject-2.0 -C link-arg=-lglib-2.0 -C link-arg=-lcairo -C link-arg=-lpcre2-8",
           "CARGO_HOME": "/run/build/WeylusCommunityEdition/cargo",
           "CARGO_NET_OFFLINE": "true",
+          "LC_ALL": "C.utf8",
           "XDG_CACHE_HOME": "/run/build/WeylusCommunityEdition/flatpak-node/cache",
           "npm_config_cache": "/run/build/WeylusCommunityEdition/flatpak-node/npm-cache",
-          "npm_config_nodedir": "/usr/lib/sdk/node18"
+          "npm_config_nodedir": "/usr/lib/sdk/node20",
+          "CARGO_BUILD_JOBS": "4"
         }
       },
       "build-commands": [
-        "cargo b --features ffmpeg-system --release",
+        "source /usr/lib/sdk/llvm22/enable.sh",
+        "mkdir -p /tmp/tsc && tar -xzf typescript.tgz -C /tmp/tsc && /tmp/tsc/package/bin/tsc",
+        "cargo b --features \"ffmpeg-system,fltk/use-wayland\" --release",
         "install -D target/release/weylus /app/bin/weylus",
         "install -D weylus.desktop /app/share/applications/io.github.electronstudio.WeylusCommunityEdition.desktop",
         "install -D io.github.electronstudio.WeylusCommunityEdition.metainfo.xml /app/share/metainfo/io.github.electronstudio.WeylusCommunityEdition.metainfo.xml",
-        "install -D io.github.electronstudio.WeylusCommunityEdition.svg /app/share/icons/hicolor/scalable/apps/io.github.electronstudio.WeylusCommunityEdition.svg"
+        "install -D io.github.electronstudio.WeylusCommunityEdition.png /app/share/icons/hicolor/512x512/apps/io.github.electronstudio.WeylusCommunityEdition.png"
       ],
       "sources": [
         {
           "type": "archive",
-          "url": "https://github.com/electronstudio/WeylusCommunityEdition/archive/refs/tags/2024.8.1.tar.gz",
-          "sha512": "6c8f0e98952795d0d76d41ea34af02216863a5e6bd807ec33e06d577cab1456735d9331e725facc1bf451555900c5fa71ab65244c318d38a88253d5ae12eb9b1"
-        },
-        {
-          "type": "patch",
-          "path": "build.rs.patch"
+          "url": "https://github.com/electronstudio/WeylusCommunityEdition/archive/refs/tags/2026.5.21.tar.gz",
+          "sha512": "04c61e7fe5a6fc7e4e3be4ccc71893f1c4d76cc4f1d15f5afa9fbb7027613d799287c931eba632511b6286efb028d0daa848e011da48a55cf72eb622e95063e5"
         },
         "generated-sources-cargo.json",
-        "generated-sources-node.json"
+        {
+          "type": "patch",
+          "path": "Cargo.toml.patch"
+        },
+        {
+          "type": "file",
+          "url": "https://registry.npmjs.org/typescript/-/typescript-5.5.3.tgz",
+          "sha512": "fe1adec84ba3681d30efaccaa3aef5ee5dcbd28fea114b5181dbd406f96486859e39532332e1cd1e4d01441ce2933b860ea3663d06e0e627cc12ab072e221471",
+          "dest-filename": "typescript.tgz"
+        },
+        {
+          "type": "file",
+          "path": "io.github.electronstudio.WeylusCommunityEdition.metainfo.xml"
+        }
       ]
     }
   ]
