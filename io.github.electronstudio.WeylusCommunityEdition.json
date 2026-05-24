@@ -20,7 +20,6 @@
   "build-options": {
     "append-path": "/usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/llvm22/bin",
     "prepend-ld-library-path": "/usr/lib/sdk/llvm22/lib",
-    "ccache": true,
     "make-args": ["-j4"]
   },
   "modules": [
