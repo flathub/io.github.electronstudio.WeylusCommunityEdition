@@ -19,7 +19,9 @@
   ],
   "build-options": {
     "append-path": "/usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/llvm22/bin",
-    "prepend-ld-library-path": "/usr/lib/sdk/llvm22/lib"
+    "prepend-ld-library-path": "/usr/lib/sdk/llvm22/lib",
+    "ccache": true,
+    "make-args": ["-j4"]
   },
   "modules": [
     "fltk-rs-modules.json",
@@ -71,7 +73,8 @@
           "LC_ALL": "C.utf8",
           "XDG_CACHE_HOME": "/run/build/WeylusCommunityEdition/flatpak-node/cache",
           "npm_config_cache": "/run/build/WeylusCommunityEdition/flatpak-node/npm-cache",
-          "npm_config_nodedir": "/usr/lib/sdk/node20"
+          "npm_config_nodedir": "/usr/lib/sdk/node20",
+          "CARGO_BUILD_JOBS": "4"
         }
       },
       "build-commands": [

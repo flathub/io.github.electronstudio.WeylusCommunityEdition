@@ -85,7 +85,7 @@
           "sha256": "2606252bc25cd8d24e1b7f7e92c3a272b37acd6734347b73b47a482834ba2491"
         }
       ],
-      "config-opts": ["-Dxft=enabled", "-Dfreetype=enabled", "-Dcairo=enabled"]
+      "config-opts": ["-Dxft=enabled", "-Dfreetype=enabled", "-Dcairo=enabled", "--buildtype=release"]
     },
     {
       "name": "pcre",
@@ -108,7 +108,7 @@
           "sha256": "50f7d0a208367e606dbf6eecc5cfbecc01a47be6ee837ae7aff2787e24b09b45"
         }
       ],
-      "config-opts": ["-Ddefault_library=static"]
+      "config-opts": ["-Ddefault_library=static", "--buildtype=release"]
     },
     {
       "name": "cairo",
@@ -120,7 +120,7 @@
           "sha256": "445ed8208a6e4823de1226a74ca319d3600e83f6369f99b14265006599c32ccb"
         }
       ],
-      "config-opts": ["-Dtests=disabled"]
+      "config-opts": ["-Dtests=disabled", "--buildtype=release"]
     },
     {
       "name": "libpanel",
@@ -135,7 +135,8 @@
       "config-opts": [
         "-Ddocs=disabled",
         "-Dintrospection=disabled",
-        "-Dvapi=false"
+        "-Dvapi=false",
+        "--buildtype=release"
       ],
       "build-options": {
         "env": ["CFLAGS=-lstdc++", "CXXFLAGS=-ldstdc++"]
@@ -155,7 +156,8 @@
         "-Ddocs=false",
         "-Dexamples=false",
         "-Dtests=false",
-        "-Dsysprof=false"
+        "-Dsysprof=false",
+        "--buildtype=release"
       ]
     },
     {
@@ -176,7 +178,7 @@
           "LD_LIBRARY_PATH": "/usr/lib/sdk/llvm22/lib:/app/lib64:/app/lib"
         }
       },
-      "config-opts": ["-Dsysprofd=none"]
+      "config-opts": ["-Dsysprofd=none", "--buildtype=release"]
     }
   ]
 }
