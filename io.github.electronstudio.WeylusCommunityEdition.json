@@ -46,7 +46,13 @@
         "--enable-libx264",
         "--disable-autodetect",
         "--enable-shared",
-        "--disable-doc"
+        "--disable-doc",
+        "--disable-everything",
+        "--enable-encoder=libx264",
+        "--enable-muxer=mp4",
+        "--enable-demuxer=rawvideo",
+        "--enable-filter=scale,buffersrc,buffersink",
+        "--enable-protocol=file"
       ],
       "sources": [
         {
@@ -93,10 +99,18 @@
         },
         "generated-sources-cargo.json",
         {
+          "type": "patch",
+          "path": "Cargo.toml.patch"
+        },
+        {
           "type": "file",
           "url": "https://registry.npmjs.org/typescript/-/typescript-5.5.3.tgz",
           "sha512": "fe1adec84ba3681d30efaccaa3aef5ee5dcbd28fea114b5181dbd406f96486859e39532332e1cd1e4d01441ce2933b860ea3663d06e0e627cc12ab072e221471",
           "dest-filename": "typescript.tgz"
+        },
+        {
+          "type": "file",
+          "path": "io.github.electronstudio.WeylusCommunityEdition.metainfo.xml"
         }
       ]
     }

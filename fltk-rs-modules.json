@@ -54,7 +54,7 @@
     },
     {
       "name": "libsupc++",
-      "buildsystem": "autotools",
+      "buildsystem": "simple",
       "sources": [
         {
           "type": "archive",
@@ -62,17 +62,10 @@
           "sha256": "438fd996826b0c82485a29da03a72d71d6e3541a83ec702df4271f6fe025d24e"
         }
       ],
-      "config-opts": [
-        "--enable-static",
-        "--disable-shared",
-        "--disable-multilib",
-        "--enable-languages=c,c++",
-        "--disable-bootstrap",
-        "--with-mpc=/app",
-        "--with-mpfr=/app",
-        "--with-gmp=/app",
-        "CFLAGS=-fPIC",
-        "CXXFLAGS=-fPIC"
+      "build-commands": [
+        "mkdir -p gcc-build && cd gcc-build && ../configure --prefix=/app --enable-static --disable-shared --disable-multilib --enable-languages=c,c++ --disable-bootstrap --with-mpc=/app --with-mpfr=/app --with-gmp=/app --disable-libquadmath --disable-libgomp --disable-libssp --disable-libatomic --disable-libitm --disable-libsanitizer --disable-libvtv --disable-libada --disable-liboffloadmic --disable-host-shared --disable-nls CFLAGS=-fPIC CXXFLAGS=-fPIC",
+        "cd gcc-build && make -j4 all-gcc all-target-libstdc++-v3",
+        "cd gcc-build && make install-gcc install-target-libstdc++-v3"
       ]
     },
     {
@@ -108,7 +101,19 @@
           "sha256": "50f7d0a208367e606dbf6eecc5cfbecc01a47be6ee837ae7aff2787e24b09b45"
         }
       ],
-      "config-opts": ["-Ddefault_library=static", "--buildtype=release"]
+      "config-opts": [
+        "-Ddefault_library=static",
+        "--buildtype=release",
+        "-Dtests=disabled",
+        "-Ddocs=disabled",
+        "-Dintrospection=disabled",
+        "-Dutilities=disabled",
+        "-Dglib=disabled",
+        "-Dgobject=disabled",
+        "-Dcairo=disabled",
+        "-Dchafa=disabled",
+        "-Dicu=disabled"
+      ]
     },
     {
       "name": "cairo",
@@ -127,9 +132,9 @@
       "buildsystem": "meson",
       "sources": [
         {
-          "type": "git",
-          "url": "https://gitlab.gnome.org/GNOME/libpanel.git",
-          "tag": "1.8.1"
+          "type": "archive",
+          "url": "https://download.gnome.org/sources/libpanel/1.8/libpanel-1.8.1.tar.xz",
+          "sha256": "b87b8fa9b79768cc704243793f0158a040a1e46d37b9889188545a7f7dcaa6fb"
         }
       ],
       "config-opts": [
@@ -147,9 +152,9 @@
       "buildsystem": "meson",
       "sources": [
         {
-          "type": "git",
-          "url": "https://gitlab.gnome.org/GNOME/libdex.git",
-          "tag": "0.10.1"
+          "type": "archive",
+          "url": "https://download.gnome.org/sources/libdex/0.10/libdex-0.10.1.tar.xz",
+          "sha256": "7472e88090db2b228307505edeba4483e872681340cb0404ae64ac3da5bed0a6"
         }
       ],
       "config-opts": [
@@ -165,9 +170,9 @@
       "buildsystem": "meson",
       "sources": [
         {
-          "type": "git",
-          "url": "https://gitlab.gnome.org/GNOME/sysprof.git",
-          "tag": "50.0"
+          "type": "archive",
+          "url": "https://download.gnome.org/sources/sysprof/50/sysprof-50.0.tar.xz",
+          "sha256": "aace44e90e90f6c34bb2fbec8ccb47b8f81103080978d65759287843c329d53a"
         }
       ],
       "build-options": {
