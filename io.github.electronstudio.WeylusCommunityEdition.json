@@ -106,14 +106,10 @@
       "sources": [
         {
           "type": "archive",
-          "url": "https://github.com/electronstudio/WeylusCommunityEdition/archive/refs/tags/2026.5.21.tar.gz",
-          "sha512": "04c61e7fe5a6fc7e4e3be4ccc71893f1c4d76cc4f1d15f5afa9fbb7027613d799287c931eba632511b6286efb028d0daa848e011da48a55cf72eb622e95063e5"
+          "url": "https://github.com/electronstudio/WeylusCommunityEdition/archive/refs/tags/2026.5.22.tar.gz",
+          "sha512": "e1219fd37d331d54b82e6834b9715fdf2317b84e1b53fdb76932a475699486cc50a61ce2927e12c1a86a7384247086f7902f1127b5982b662554326269fc28fa"
         },
         "generated-sources-cargo.json",
-        {
-          "type": "patch",
-          "path": "Cargo.toml.patch"
-        },
         {
           "type": "file",
           "url": "https://registry.npmjs.org/typescript/-/typescript-5.5.3.tgz",
