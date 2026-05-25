@@ -22,6 +22,18 @@
     "prepend-ld-library-path": "/usr/lib/sdk/llvm22/lib",
     "make-args": ["-j4"]
   },
+  "cleanup": [
+    "/include",
+    "/share/man",
+    "/share/doc",
+    "/share/info",
+    "/share/help",
+    "/share/gir-1.0",
+    "/share/vala",
+    "/share/gcc-15.2.0",
+    "*.a",
+    "*.la"
+  ],
   "modules": [
     "fltk-rs-modules.json",
     {
