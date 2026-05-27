@@ -33,7 +33,6 @@
     "/share/gcc-15.2.0",
     "*.a",
     "*.la",
-    "/lib/debug",
     "/share/ffmpeg",
     "/lib/pkgconfig"
   ],
