@@ -1,126 +1,130 @@
 {
-  "id": "io.github.electronstudio.WeylusCommunityEdition",
-  "runtime": "org.gnome.Platform",
-  "runtime-version": "50",
-  "sdk": "org.gnome.Sdk",
-  "sdk-extensions": [
-    "org.freedesktop.Sdk.Extension.rust-stable",
-    "org.freedesktop.Sdk.Extension.node20",
-    "org.freedesktop.Sdk.Extension.llvm22"
-  ],
-  "command": "weylus",
-  "finish-args": [
-    "--socket=wayland",
-    "--socket=fallback-x11",
-    "--share=ipc",
-    "--device=all",
-    "--share=network",
-    "--filesystem=xdg-run/pipewire-0"
-  ],
-  "build-options": {
-    "append-path": "/usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/llvm22/bin",
-    "prepend-ld-library-path": "/usr/lib/sdk/llvm22/lib",
-    "make-args": ["-j4"]
-  },
-  "cleanup": [
-    "/include",
-    "/share/man",
-    "/share/doc",
-    "/share/info",
-    "/share/help",
-    "/share/gir-1.0",
-    "/share/vala",
-    "/share/gcc-15.2.0",
-    "*.a",
-    "*.la"
-  ],
-  "modules": [
-    "fltk-rs-modules.json",
-    {
-      "name": "x264",
-      "buildsystem": "autotools",
-      "config-opts": ["--disable-opencl", "--disable-cli", "--enable-shared"],
-      "sources": [
-        {
-          "type": "archive",
-          "url": "https://code.videolan.org/videolan/x264/-/archive/0480cb05fa188d37ae87e8f4fd8f1aea3711f7ee/x264-0480cb05fa188d37ae87e8f4fd8f1aea3711f7ee.tar.bz2",
-          "sha512": "4ff475b95e3bd93d1478155083daea241be0ba738ec2576fa423f247c14b3c04192e72809edf5bf6c2c928cb2bb2d4b739bda12749074df2d56aec066c627ac0"
-        }
-      ]
-    },
-    {
-      "name": "ffmpeg",
-      "buildsystem": "autotools",
-      "config-opts": [
-        "--disable-debug",
-        "--disable-programs",
-        "--enable-gpl",
-        "--enable-libx264",
-        "--disable-autodetect",
-        "--enable-shared",
-        "--disable-doc",
-        "--disable-everything",
-        "--enable-encoder=libx264",
-        "--enable-muxer=mp4",
-        "--enable-demuxer=rawvideo",
-        "--enable-filter=scale,buffersrc,buffersink",
-        "--enable-protocol=file"
-      ],
-      "sources": [
-        {
-          "type": "archive",
-          "url": "https://www.ffmpeg.org/releases/ffmpeg-8.1.1.tar.xz",
-          "sha512": "f7873208d99cccfcf7b6aa3fe8e740e0f90f0ac55352f5eed93f994d51b5839700907811ac6cb160d09b4dacc6b174609bb7ed7fe902b3be3d787d86fe1b17bd"
-        }
-      ]
-    },
-
-    {
-      "name": "WeylusCommunityEdition",
-      "buildsystem": "simple",
-      "build-options": {
-        "append-path": "/usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/node20/bin",
+    "id": "io.github.electronstudio.WeylusCommunityEdition",
+    "runtime": "org.freedesktop.Platform",
+    "runtime-version": "25.08",
+    "sdk": "org.freedesktop.Sdk",
+    "sdk-extensions": [
+        "org.freedesktop.Sdk.Extension.rust-stable",
+        "org.freedesktop.Sdk.Extension.node20",
+        "org.freedesktop.Sdk.Extension.llvm22"
+    ],
+    "command": "weylus",
+    "finish-args": [
+        "--socket=wayland",
+        "--socket=fallback-x11",
+        "--share=ipc",
+        "--device=all",
+        "--share=network",
+        "--filesystem=xdg-run/pipewire-0"
+    ],
+    "build-options": {
+        "append-path": "/usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/llvm22/bin",
         "prepend-ld-library-path": "/usr/lib/sdk/llvm22/lib",
-        "env": {
-          "CFLAGS": "-I/app/include/pango-1.0/ -I/app/include/glib-2.0/ -I/app/lib64/glib-2.0/include/ -I/app/include/harfbuzz/ -I/app/include/cairo/ -lffi -lgobject-2.0 -lglib-2.0 -lcairo -lpcre2-8",
-          "CXXFLAGS": "-I/app/include/pango-1.0/ -I/app/include/glib-2.0/ -I/app/lib64/glib-2.0/include/ -I/app/include/harfbuzz/ -I/app/include/cairo/ -lffi -lgobject-2.0 -lglib-2.0 -lcairo -lpcre2-8",
-          "RUSTFLAGS": "-A dead_code -A unused_imports -L /app/lib  -L /app/lib64 -C link-arg=-I/app/include/pango-1.0/ -C link-arg=-I/app/include/glib-2.0/ -C link-arg=-I/app/lib64/glib-2.0/include/ -C link-arg=-I/app/include/harfbuzz/ -C link-arg=-I/app/include/cairo/ -C link-arg=-lffi -C link-arg=-lgobject-2.0 -C link-arg=-lglib-2.0 -C link-arg=-lcairo -C link-arg=-lpcre2-8",
-          "CARGO_HOME": "/run/build/WeylusCommunityEdition/cargo",
-          "CARGO_NET_OFFLINE": "true",
-          "LC_ALL": "C.utf8",
-          "XDG_CACHE_HOME": "/run/build/WeylusCommunityEdition/flatpak-node/cache",
-          "npm_config_cache": "/run/build/WeylusCommunityEdition/flatpak-node/npm-cache",
-          "npm_config_nodedir": "/usr/lib/sdk/node20",
-          "CARGO_BUILD_JOBS": "4"
-        }
-      },
-      "build-commands": [
-        "source /usr/lib/sdk/llvm22/enable.sh",
-        "mkdir -p /tmp/tsc && tar -xzf typescript.tgz -C /tmp/tsc && /tmp/tsc/package/bin/tsc",
-        "cargo b --features \"ffmpeg-system,fltk/use-wayland\" --release",
-        "install -D target/release/weylus /app/bin/weylus",
-        "install -D weylus.desktop /app/share/applications/io.github.electronstudio.WeylusCommunityEdition.desktop",
-        "install -D io.github.electronstudio.WeylusCommunityEdition.metainfo.xml /app/share/metainfo/io.github.electronstudio.WeylusCommunityEdition.metainfo.xml",
-        "install -D io.github.electronstudio.WeylusCommunityEdition.png /app/share/icons/hicolor/512x512/apps/io.github.electronstudio.WeylusCommunityEdition.png"
-      ],
-      "sources": [
-        {
-          "type": "archive",
-          "url": "https://github.com/electronstudio/WeylusCommunityEdition/archive/refs/tags/2026.5.22.tar.gz",
-          "sha512": "e1219fd37d331d54b82e6834b9715fdf2317b84e1b53fdb76932a475699486cc50a61ce2927e12c1a86a7384247086f7902f1127b5982b662554326269fc28fa"
-        },
-        "generated-sources-cargo.json",
-        {
-          "type": "file",
-          "url": "https://registry.npmjs.org/typescript/-/typescript-5.5.3.tgz",
-          "sha512": "fe1adec84ba3681d30efaccaa3aef5ee5dcbd28fea114b5181dbd406f96486859e39532332e1cd1e4d01441ce2933b860ea3663d06e0e627cc12ab072e221471",
-          "dest-filename": "typescript.tgz"
+        "make-args": ["-j4"]
+    },
+    "cleanup": [
+        "/include",
+        "*.la",
+        "*.a"
+    ],
+    "modules": [
+      {
+            "name": "mpc",
+            "//": "libsupc++ requires",
+            "buildsystem": "autotools",
+            "config-opts": [
+                "--enable-static",
+                "--disable-shared",
+                "CFLAGS=-fPIC -std=gnu17"
+            ],
+            "cleanup": ["*"],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://ftp.gnu.org/gnu/mpc/mpc-1.3.1.tar.gz",
+                    "sha256": "ab642492f5cf882b74aa0cb730cd410a81edcdbec895183ce930e706c1c759b8"
+                }
+            ]
         },
         {
-          "type": "file",
-          "path": "io.github.electronstudio.WeylusCommunityEdition.metainfo.xml"
+            "name": "libsupc++",
+            "//": "WeylusCommunityEdition requires",
+            "buildsystem": "simple",
+            "cleanup": ["*"],
+            "build-commands": [
+                "mkdir -p gcc-build && cd gcc-build && ../configure --prefix=/app --enable-static --disable-shared --disable-multilib --enable-languages=c,c++ --disable-bootstrap --with-mpc=/app --with-mpfr=/usr --with-gmp=/usr --disable-libquadmath --disable-libgomp --disable-libssp --disable-libatomic --disable-libitm --disable-libsanitizer --disable-libvtv --disable-libada --disable-liboffloadmic --disable-host-shared --disable-nls CFLAGS=-fPIC CXXFLAGS=-fPIC",
+                "cd gcc-build && make -j4 all-gcc all-target-libstdc++-v3",
+                "cd gcc-build && make install-gcc install-target-libstdc++-v3"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://ftp.gnu.org/gnu/gcc/gcc-15.2.0/gcc-15.2.0.tar.xz",
+                    "sha256": "438fd996826b0c82485a29da03a72d71d6e3541a83ec702df4271f6fe025d24e"
+                }
+            ]
+        },
+        {
+            "name": "x264",
+            "buildsystem": "autotools",
+            "config-opts": [
+                "--disable-opencl",
+                "--disable-cli",
+                "--enable-shared"
+            ],
+            "cleanup": ["*"],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://code.videolan.org/videolan/x264.git",
+                    "commit": "b35605ace3ddf7c1a5d67a2eb553f034aef41d55"
+                }
+            ]
+        },
+        {
+            "name": "WeylusCommunityEdition",
+            "buildsystem": "simple",
+            "build-options": {
+                "append-path": "/usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/node20/bin",
+                "prepend-ld-library-path": "/usr/lib/sdk/llvm22/lib",
+                "env": {
+                    "CARGO_HOME": "/run/build/WeylusCommunityEdition/cargo",
+                    "CARGO_NET_OFFLINE": "true",
+                    "LC_ALL": "C.utf8",
+                    "XDG_CACHE_HOME": "/run/build/WeylusCommunityEdition/flatpak-node/cache",
+                    "npm_config_cache": "/run/build/WeylusCommunityEdition/flatpak-node/npm-cache",
+                    "npm_config_nodedir": "/usr/lib/sdk/node20",
+                    "CARGO_BUILD_JOBS": "4",
+                    "RUSTFLAGS": "-L /app/lib -L /app/lib64 -C link-arg=-lstdc++"
+                }
+            },
+            "build-commands": [
+                "source /usr/lib/sdk/llvm22/enable.sh",
+                "mkdir -p /tmp/tsc && tar -xzf typescript.tgz -C /tmp/tsc && /tmp/tsc/package/bin/tsc",
+                "cargo b --features \"ffmpeg-system,fltk/use-wayland\" --release",
+                "install -D target/release/weylus -t /app/bin/",
+                "install -D weylus.desktop /app/share/applications/${FLATPAK_ID}.desktop",
+                "install -D ${FLATPAK_ID}.metainfo.xml -t /app/share/metainfo/",
+                "install -D ${FLATPAK_ID}.png -t /app/share/icons/hicolor/512x512/apps/"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/electronstudio/WeylusCommunityEdition/archive/refs/tags/2026.5.22.tar.gz",
+                    "sha512": "e1219fd37d331d54b82e6834b9715fdf2317b84e1b53fdb76932a475699486cc50a61ce2927e12c1a86a7384247086f7902f1127b5982b662554326269fc28fa"
+                },
+                "generated-sources-cargo.json",
+                {
+                    "type": "file",
+                    "url": "https://registry.npmjs.org/typescript/-/typescript-5.5.3.tgz",
+                    "sha512": "fe1adec84ba3681d30efaccaa3aef5ee5dcbd28fea114b5181dbd406f96486859e39532332e1cd1e4d01441ce2933b860ea3663d06e0e627cc12ab072e221471",
+                    "dest-filename": "typescript.tgz"
+                },
+                {
+                    "type": "file",
+                    "path": "io.github.electronstudio.WeylusCommunityEdition.metainfo.xml"
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }
