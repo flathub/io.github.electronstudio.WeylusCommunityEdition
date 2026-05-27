@@ -92,7 +92,7 @@ This saves ~30–50 MB from the bundle. `cleanup` runs **after** all modules fin
 
 ```bash
 # Build locally (expect 2+ hours first time)
-flatpak-builder --install --user --force-clean builddir io.github.electronstudio.WeylusCommunityEdition.json
+flatpak-builder --install --install-deps-from=flathub --user --force-clean builddir io.github.electronstudio.WeylusCommunityEdition.json
 
 # Run from builddir without installing
 flatpak-builder --run builddir io.github.electronstudio.WeylusCommunityEdition.json weylus
